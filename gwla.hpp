@@ -53,9 +53,8 @@ protected:
 
 public:
     __Vec_impl() { m_data = reinterpret_cast<T*>( new T[m_size]() ); };
-    template <typename S>
-    __Vec_impl(S value) {
-        m_data = reinterpret_cast<T*>( new T[m_size] );
+    __Vec_impl(T value) {
+        m_data = new T[m_size];
         std::fill(m_data, m_data + m_size, value);
     }
     __Vec_impl(T *data_) { m_data = data_; }
@@ -340,9 +339,8 @@ protected:
 
 public:
     __Matrix_impl() { m_data = reinterpret_cast<T*>( new T[this->size()]() ); }
-    template<typename S>
-    explicit __Matrix_impl(S value) {
-        m_data = reinterpret_cast<T*>( new T[this->size()] {value} );
+    explicit __Matrix_impl(T value) {
+        m_data = new T[this->size()] {value};
         std::fill(m_data, m_data + size(), value);
     }
     __Matrix_impl(T *data_) { m_data = data_; }
