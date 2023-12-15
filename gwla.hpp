@@ -109,7 +109,7 @@ public:
         return *this;
     }
 
-    friend __Vec_impl& operator+=(const __Vec_impl& lhs, const __Vec_impl& rhs) {
+    friend __Vec_impl& operator+=(__Vec_impl& lhs, const __Vec_impl& rhs) {
         assert(lhs.size() == rhs.size());
         for (size_t i = 0 ; i < size() ; i++)
             lhs(i) = lhs(i) + rhs(i);
@@ -125,7 +125,7 @@ public:
         return *vec;
     }
 
-    friend __Vec_impl& operator+=(const __Vec_impl& lhs, const T& value) {
+    friend __Vec_impl& operator+=(__Vec_impl& lhs, const T& value) {
         for (size_t i = 0 ; i < lhs.size() ; i++)
             lhs(i) = lhs(i) + value;
         return lhs;
@@ -138,7 +138,7 @@ public:
         return *vec;
     }
 
-    friend __Vec_impl& operator-=(const __Vec_impl& lhs, const __Vec_impl& rhs) {
+    friend __Vec_impl& operator-=(__Vec_impl& lhs, const __Vec_impl& rhs) {
         assert(lhs.size() == rhs.size());
         for (size_t i = 0 ; i < lhs.size() ; i++)
             lhs(i) = lhs(i) - rhs(i);
@@ -154,7 +154,7 @@ public:
         return *vec;
     }
 
-    friend __Vec_impl& operator-=(const __Vec_impl& lhs, const T& value) {
+    friend __Vec_impl& operator-=(__Vec_impl& lhs, const T& value) {
         for (size_t i = 0 ; i < lhs.size() ; i++)
             lhs(i) = lhs(i) - value;
         return lhs;
@@ -167,7 +167,7 @@ public:
         return *vec;
     }
 
-    friend __Vec_impl& operator*=(const __Vec_impl& lhs, const __Vec_impl& rhs) {
+    friend __Vec_impl& operator*=(__Vec_impl& lhs, const __Vec_impl& rhs) {
         assert(lhs.size() == rhs.size());
         for (size_t i = 0 ; i < lhs.size() ; i++)
             lhs(i) = lhs(i) * rhs(i);
@@ -183,7 +183,7 @@ public:
         return *vec;
     }
 
-    friend __Vec_impl& operator*=(const __Vec_impl& lhs, const T& value) {
+    friend __Vec_impl& operator*=(__Vec_impl& lhs, const T& value) {
         for (size_t i = 0 ; i < lhs.size() ; i++)
             lhs(i) = lhs(i) * value;
         return lhs;
@@ -196,7 +196,7 @@ public:
         return *vec;
     }
 
-    friend __Vec_impl& operator/=(const __Vec_impl& lhs, const __Vec_impl& rhs) {
+    friend __Vec_impl& operator/=(__Vec_impl& lhs, const __Vec_impl& rhs) {
         assert(lhs.size() == rhs.size());
         for (size_t i = 0 ; i < lhs.size() ; i++)
             lhs(i) = lhs(i) - rhs(i);
@@ -212,7 +212,7 @@ public:
         return *vec;
     }
 
-    friend __Vec_impl& operator/=(const __Vec_impl& lhs, const T& value) {
+    friend __Vec_impl& operator/=(__Vec_impl& lhs, const T& value) {
         for (size_t i = 0 ; i < lhs.size() ; i++)
             lhs(i) = lhs(i) / value;
         return lhs;
@@ -225,7 +225,7 @@ public:
         return *vec;
     }
 
-    friend __Vec_impl& operator%=(const __Vec_impl& lhs, const T& value) {
+    friend __Vec_impl& operator%=(__Vec_impl& lhs, const T& value) {
         for (size_t i = 0 ; i < lhs.size() ; i++)
             lhs(i) = lhs(i) % value;
         return lhs;
@@ -371,7 +371,7 @@ public:
     }
     virtual size_t size() const { return (ROW * COL); }
 
-    __Matrix_impl& operator=(const __Matrix_impl& other) {
+    __Matrix_impl& operator=(__Matrix_impl& other) {
         assert(this->size() == other.size());
         if (this == &other)
             return *this;
@@ -383,7 +383,7 @@ public:
         return *this;
     }
 
-    friend __Matrix_impl& operator+=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator+=(__Matrix_impl& lhs,
                                      const __Matrix_impl& rhs) {
         assert(lhs.get_shape() == rhs.get_shape());
         for (size_t i = 0 ; i < lhs.get_row() ; i++)
@@ -392,7 +392,7 @@ public:
         return lhs;
     }
 
-    friend __Matrix_impl& operator+=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator+=(__Matrix_impl& lhs,
                                      const T& value) {
         for (int i = 0 ; i < lhs.get_row() ; i++)
             for (size_t j = 0 ; j < lhs.get_col() ; j++)
@@ -419,7 +419,7 @@ public:
         return *mat;
     }
 
-    friend __Matrix_impl& operator*=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator*=(__Matrix_impl& lhs,
                                      const __Matrix_impl& rhs) {
         assert(lhs.get_shape() == rhs.get_shape());
         for (size_t i = 0 ; i < lhs.get_row() ; i++)
@@ -428,7 +428,7 @@ public:
         return lhs;
     }
 
-    friend __Matrix_impl& operator*=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator*=(__Matrix_impl& lhs,
                                      const T& value) {
         for (int i = 0 ; i < lhs.get_row() ; i++)
             for (size_t j = 0 ; j < lhs.get_col() ; j++)
@@ -455,7 +455,7 @@ public:
         return *mat;
     }
 
-    friend __Matrix_impl& operator-=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator-=(__Matrix_impl& lhs,
                                      const __Matrix_impl& rhs) {
         assert(lhs.get_shape() == rhs.get_shape());
         for (size_t i = 0 ; i < lhs.get_row() ; i++)
@@ -464,7 +464,7 @@ public:
         return lhs;
     }
 
-    friend __Matrix_impl& operator-=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator-=(__Matrix_impl& lhs,
                                      const T& value) {
         for (size_t i = 0 ; i < lhs.get_row() ; i++)
             for (size_t j = 0 ; j < lhs.get_col() ; j++)
@@ -491,7 +491,7 @@ public:
         return *mat;
     }
 
-    friend __Matrix_impl& operator/=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator/=(__Matrix_impl& lhs,
                                      const __Matrix_impl& rhs) {
         assert(lhs.get_shape() == rhs.get_shape());
         for (size_t i = 0 ; i < lhs.get_row() ; i++)
@@ -500,7 +500,7 @@ public:
         return lhs;
     }
 
-    friend __Matrix_impl& operator/=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator/=(__Matrix_impl& lhs,
                                      const T& value) {
         for (size_t i = 0 ; i < lhs.get_row() ; i++)
             for (size_t j = 0 ; j < lhs.get_col() ; j++)
@@ -527,7 +527,7 @@ public:
         return *mat;
     }
 
-    friend __Matrix_impl& operator%=(const __Matrix_impl& lhs,
+    friend __Matrix_impl& operator%=(__Matrix_impl& lhs,
                                      const T& value) {
         for (size_t i = 0 ; i < lhs.get_row() ; i++)
             for (size_t j = 0 ; j < lhs.get_col() ; j++)
