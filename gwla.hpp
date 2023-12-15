@@ -45,6 +45,111 @@ namespace GW {
 // TODO: Write test
 // TODO: Type checking is too strict
 
+
+template <typename T, size_t N> class __Vec_impl;
+template <typename T> class __Vec2_impl;
+template <typename T> class __Vec3_impl;
+template <typename T> class __Vec4_impl;
+
+
+template <typename T, size_t N, size_t M> class __Matrix_impl;
+template <typename T> class __Matrix2_impl;
+template <typename T> class __Matrix3_impl;
+template <typename T> class __Matrix4_impl;
+
+
+template<size_t N> using Vec_f = __Vec_impl<float, N>;
+template<size_t N> using Vec_d = __Vec_impl<double, N>;
+#define Vec Vec_f
+
+template<size_t N> using Vec_i64 = __Vec_impl<int64_t, N>;
+template<size_t N> using Vec_i32 = __Vec_impl<int32_t, N>;
+template<size_t N> using Vec_i16 = __Vec_impl<int16_t, N>;
+template<size_t N> using Vec_i8 = __Vec_impl<int8_t, N>;
+#define Vec_i Vec_i32
+
+template<size_t N> using Vec_u64 = __Vec_impl<uint64_t, N>;
+template<size_t N> using Vec_u32 = __Vec_impl<uint32_t, N>;
+template<size_t N> using Vec_u16 = __Vec_impl<uint16_t, N>;
+template<size_t N> using Vec_u8 = __Vec_impl<uint8_t, N>;
+
+
+typedef __Vec2_impl<float>       Vec2;
+typedef __Vec2_impl<int8_t>      Vec2_i8;
+typedef __Vec2_impl<int16_t>     Vec2_i16;
+typedef __Vec2_impl<int32_t>     Vec2_i32;
+typedef __Vec2_impl<uint8_t>     Vec2_u8;
+typedef __Vec2_impl<uint16_t>    Vec2_u16;
+typedef __Vec2_impl<uint32_t>    Vec2_u32;
+typedef __Vec2_impl<double>      Vec2_d;
+
+
+typedef __Vec3_impl<float>       Vec3;
+typedef __Vec3_impl<int8_t>      Vec3_i8;
+typedef __Vec3_impl<int16_t>     Vec3_i16;
+typedef __Vec3_impl<int32_t>     Vec3_i32;
+typedef __Vec3_impl<uint8_t>     Vec3_u8;
+typedef __Vec3_impl<uint16_t>    Vec3_u16;
+typedef __Vec3_impl<uint32_t>    Vec3_u32;
+typedef __Vec3_impl<double>      Vec3_d;
+
+
+typedef __Vec4_impl<float>       Vec4;
+typedef __Vec4_impl<int8_t>      Vec4_i8;
+typedef __Vec4_impl<int16_t>     Vec4_i16;
+typedef __Vec4_impl<int32_t>     Vec4_i32;
+typedef __Vec4_impl<uint8_t>     Vec4_u8;
+typedef __Vec4_impl<uint16_t>    Vec4_u16;
+typedef __Vec4_impl<uint32_t>    Vec4_u32;
+typedef __Vec4_impl<double>      Vec4_d;
+
+
+template<size_t N, size_t  M> using Mat_f = __Matrix_impl<float, N, M>;
+template<size_t N, size_t  M> using Mat_d = __Matrix_impl<double, N, M>;
+#define Mat Mat_f
+
+template<size_t N, size_t  M> using Mat_i64 = __Matrix_impl<int64_t, N, M>;
+template<size_t N, size_t  M> using Mat_i32 = __Matrix_impl<int32_t, N, M>;
+template<size_t N, size_t  M> using Mat_i16 = __Matrix_impl<int16_t, N, M>;
+template<size_t N, size_t  M> using Mat_i8 = __Matrix_impl<int8_t, N, M>;
+#define Mat_i Mat_i32
+
+template<size_t N, size_t  M> using Mat_u64 = __Matrix_impl<uint64_t, N, M>;
+template<size_t N, size_t  M> using Mat_u32 = __Matrix_impl<uint32_t, N, M>;
+template<size_t N, size_t  M> using Mat_u16 = __Matrix_impl<uint16_t, N, M>;
+template<size_t N, size_t  M> using Mat_u8 = __Matrix_impl<uint8_t, N, M>;
+
+
+typedef __Matrix2_impl<float>       Mat2;
+typedef __Matrix2_impl<int8_t>      Mat2_i8;
+typedef __Matrix2_impl<int16_t>     Mat2_i16;
+typedef __Matrix2_impl<int32_t>     Mat2_i32;
+typedef __Matrix2_impl<uint8_t>     Mat2_u8;
+typedef __Matrix2_impl<uint16_t>    Mat2_u16;
+typedef __Matrix2_impl<uint32_t>    Mat2_u32;
+typedef __Matrix2_impl<double>      Mat2_d;
+
+
+typedef __Matrix3_impl<float>       Mat3;
+typedef __Matrix3_impl<int8_t>      Mat3_i8;
+typedef __Matrix3_impl<int16_t>     Mat3_i16;
+typedef __Matrix3_impl<int32_t>     Mat3_i32;
+typedef __Matrix3_impl<uint8_t>     Mat3_u8;
+typedef __Matrix3_impl<uint16_t>    Mat3_u16;
+typedef __Matrix3_impl<uint32_t>    Mat3_u32;
+typedef __Matrix3_impl<double>      Mat3_d;
+
+
+typedef __Matrix4_impl<float>       Mat4;
+typedef __Matrix4_impl<int8_t>      Mat4_i8;
+typedef __Matrix4_impl<int16_t>     Mat4_i16;
+typedef __Matrix4_impl<int32_t>     Mat4_i32;
+typedef __Matrix4_impl<uint8_t>     Mat4_u8;
+typedef __Matrix4_impl<uint16_t>    Mat4_u16;
+typedef __Matrix4_impl<uint32_t>    Mat4_u32;
+typedef __Matrix4_impl<double>      Mat4_d;
+
+
 template <typename T, size_t N>
 class __Vec_impl {
 protected:
@@ -237,7 +342,14 @@ public:
         return *vec;
     }
 
-    T dot(const __Vec_impl other) {
+    friend __Vec_impl& operator-(const __Vec_impl& vec) {
+        __Vec_impl *neg_vec = new __Vec_impl;
+        for (size_t i = 0 ; i < vec.size() ; i++)
+            (*neg_vec)(i) = -1 * vec(i);
+        return *neg_vec;
+    }
+
+    T dot(const __Vec_impl& other) {
         assert(this->size() == other.size());
         T res {0};
         for (size_t i = 0 ; i < this->size() ; i++)
@@ -272,54 +384,141 @@ public:
         return *res;
     }
 
-    inline const size_t size() const { return m_size; }
+    float vec_lenght() {
+        float lenght = 0;
+        for (int i = 0 ; i < size() ; i++) {
+            lenght += (m_data[i] * m_data[i]);
+        }
+        return sqrt(lenght);
+    }
+
+    void normalize() {
+        float lenght = vec_lenght();
+        (*this) /= lenght;
+    }
+
+    static __Vec_impl<float, N> normalize(__Vec_impl<float, N> vec) {
+        __Vec_impl<float, N> *norm_vec = new __Vec_impl<float, N> {0.0f};
+        *norm_vec = vec;
+        norm_vec.normilize();
+        return *norm_vec;
+    }
+
+    virtual inline const size_t size() const { return m_size; }
 };
 
 
-template<size_t N> using Vec_f = __Vec_impl<float, N>;
-template<size_t N> using Vec_d = __Vec_impl<double, N>;
-#define Vec Vec_f
+template <typename T>
+class __Vec2_impl : public __Vec_impl<T, 2> {
+    using __Vec_impl<T, 2>::m_data;
 
-template<size_t N> using Vec_i64 = __Vec_impl<int64_t, N>;
-template<size_t N> using Vec_i32 = __Vec_impl<int32_t, N>;
-template<size_t N> using Vec_i16 = __Vec_impl<int16_t, N>;
-template<size_t N> using Vec_i8 = __Vec_impl<int8_t, N>;
-#define Vec_i Vec_i32
+public:
+    T& x = m_data[0];
+    T& y = m_data[1];
 
-template<size_t N> using Vec_u64 = __Vec_impl<uint64_t, N>;
-template<size_t N> using Vec_u32 = __Vec_impl<uint32_t, N>;
-template<size_t N> using Vec_u16 = __Vec_impl<uint16_t, N>;
-template<size_t N> using Vec_u8 = __Vec_impl<uint8_t, N>;
+    using __Vec_impl<T, 2>::__Vec_impl;
+};
 
 
-typedef Vec<2>                Vec2;
-typedef Vec_i8<2>             Vec2_i8;
-typedef Vec_i16<2>            Vec2_i16;
-typedef Vec_i32<2>            Vec2_i32;
-typedef Vec_u8<2>             Vec2_u8;
-typedef Vec_u16<2>            Vec2_u16;
-typedef Vec_u32<2>            Vec2_u32;
-typedef Vec_d<2>              Vec2_d;
+template <typename T>
+class __Vec3_impl : public __Vec_impl<T, 3> {
+    using __Vec_impl<T, 3>::m_data;
+
+public:
+    T& x = m_data[0];
+    T& y = m_data[1];
+    T& z = m_data[2];
+
+    using __Vec_impl<T, 3>::__Vec_impl;
+
+    __Vec3_impl& operator=(const __Vec_impl<T, 3>& other) {
+        if (this == &other)
+            return *this;
+        for (size_t i = 0 ; i < 3 ; i++) {
+            x = other(0);
+            y = other(1);
+            z = other(2);
+        }
+        return *this;
+    }
+
+    __Vec3_impl& operator=(__Vec3_impl& other) {
+        if (this == &other)
+            return *this;
+        for (size_t i = 0 ; i < 3 ; i++) {
+            std::copy(other.m_data, other.m_data + 3, this->m_data);
+        }
+        return *this;
+    }
+
+    template <typename S, typename R>
+    static __Vec3_impl<typename std::common_type<S, R>::type> cross(const __Vec3_impl<S>& x, const __Vec3_impl<R>& y) {
+        __Vec3_impl<typename std::common_type<S, R>::type> *cross_vec = new __Vec3_impl<typename std::common_type<S, R>::type>;
+        (*cross_vec)(0) = (x(1) * y(2)) - (y(1) * x(2));
+        (*cross_vec)(1) = (x(2) * y(0)) - (y(2) * x(0));
+        (*cross_vec)(2) = (x(0) * y(1)) - (y(0) * x(1));
+        return *cross_vec;
+    }
 
 
-typedef Vec<3>                Vec3;
-typedef Vec_i8<3>             Vec3_i8;
-typedef Vec_i16<3>            Vec3_i16;
-typedef Vec_i32<3>            Vec3_i32;
-typedef Vec_u8<3>             Vec3_u8;
-typedef Vec_u16<3>            Vec3_u16;
-typedef Vec_u32<3>            Vec3_u32;
-typedef Vec_d<3>              Vec3_d;
+    template <typename S>
+    __Vec3_impl<typename std::common_type<T, S>::type> cross(const __Vec3_impl<S>& other) const {
+        __Vec3_impl<typename std::common_type<T, S>::type>* cross_vec
+            = new __Vec3_impl<typename std::common_type<T, S>::type>;
+        (*cross_vec)(0) = ((*this)(1) * other(2)) - (other(1) * (*this)(2));
+        (*cross_vec)(1) = ((*this)(2) * other(0)) - (other(2) * (*this)(0));
+        (*cross_vec)(2) = ((*this)(0) * other(1)) - (other(0) * (*this)(1));
+        return *cross_vec;
+    }
 
 
-typedef Vec<4>                Vec4;
-typedef Vec_i8<4>             Vec4_i8;
-typedef Vec_i16<4>            Vec4_i16;
-typedef Vec_i32<4>            Vec4_i32;
-typedef Vec_u8<4>             Vec4_u8;
-typedef Vec_u16<4>            Vec4_u16;
-typedef Vec_u32<4>            Vec4_u32;
-typedef Vec_d<4>              Vec4_d;
+    static __Matrix4_impl<T>
+    look_at(const __Vec3_impl<T>& eye, const __Vec3_impl<T>& center, const __Vec3_impl<T>& up) {
+        __Matrix4_impl<T> matrix;
+        __Vec3_impl<T> X, Y, Z;
+        Z = eye - center;
+        Z.normalize();
+        Y = up;
+        X = Y.cross(Z);
+        Y = Z.cross(X);
+        X.normalize();
+        Y.normalize();
+
+        matrix(0, 0) = X.x;
+        matrix(1, 0) = X.y;
+        matrix(2, 0) = X.z;
+        matrix(3, 0) = -X.dot(eye);
+        matrix(0, 1) = Y.x;
+        matrix(1, 1) = Y.y;
+        matrix(2, 1) = Y.z;
+        matrix(3, 1) = -Y.dot(eye);
+        matrix(0, 2) = Z.x;
+        matrix(1, 2) = Z.y;
+        matrix(2, 2) = Z.z;
+        matrix(3, 2) = -Z.dot(eye);
+        matrix(0, 3) = 0;
+        matrix(1, 3) = 0;
+        matrix(2, 3) = 0;
+        matrix(3, 3) = 1.0f;
+
+        return matrix;
+    }
+
+};
+
+
+template <typename T>
+class __Vec4_impl : public __Vec_impl<T, 4> {
+    using __Vec_impl<T, 4>::m_data;
+
+public:
+    T& x = m_data[0];
+    T& y = m_data[1];
+    T& z = m_data[2];
+    T& w = m_data[3];
+
+    using __Vec_impl<T, 4>::__Vec_impl;
+};
 
 
 struct MatShape {
@@ -635,48 +834,35 @@ public:
 };
 
 
-template<size_t N, size_t  M> using Mat_f = __Matrix_impl<float, N, M>;
-template<size_t N, size_t  M> using Mat_d = __Matrix_impl<double, N, M>;
-#define Mat Mat_f
+template <typename T>
+class __Matrix2_impl : public __Matrix_impl<T, 2, 2> {
+    using __Matrix_impl<T, 2, 2>::m_data;
+    using __Matrix_impl<T, 2, 2>::ROW;
+    using __Matrix_impl<T, 2, 2>::COL;
 
-template<size_t N, size_t  M> using Mat_i64 = __Matrix_impl<int64_t, N, M>;
-template<size_t N, size_t  M> using Mat_i32 = __Matrix_impl<int32_t, N, M>;
-template<size_t N, size_t  M> using Mat_i16 = __Matrix_impl<int16_t, N, M>;
-template<size_t N, size_t  M> using Mat_i8 = __Matrix_impl<int8_t, N, M>;
-#define Mat_i Mat_i32
-
-template<size_t N, size_t  M> using Mat_u64 = __Matrix_impl<uint64_t, N, M>;
-template<size_t N, size_t  M> using Mat_u32 = __Matrix_impl<uint32_t, N, M>;
-template<size_t N, size_t  M> using Mat_u16 = __Matrix_impl<uint16_t, N, M>;
-template<size_t N, size_t  M> using Mat_u8 = __Matrix_impl<uint8_t, N, M>;
+public:
+    using __Matrix_impl<T, 2, 2>::__Matrix_impl;
+};
 
 
-typedef Mat<2,2>                Mat2;
-typedef Mat_i8<2,2>             Mat2_i8;
-typedef Mat_i16<2,2>            Mat2_i16;
-typedef Mat_i32<2,2>            Mat2_i32;
-typedef Mat_u8<2,2>             Mat2_u8;
-typedef Mat_u16<2,2>            Mat2_u16;
-typedef Mat_u32<2,2>            Mat2_u32;
-typedef Mat_d<2,2>              Mat2_d;
+template <typename T>
+class __Matrix3_impl : public __Matrix_impl<T, 3, 3> {
+    using __Matrix_impl<T, 3, 3>::m_data;
+    using __Matrix_impl<T, 3, 3>::ROW;
+    using __Matrix_impl<T, 3, 3>::COL;
+public:
+    using __Matrix_impl<T, 3, 3>::__Matrix_impl;
+};
 
-typedef Mat<3,3>                Mat3;
-typedef Mat_i8<3,3>             Mat3_i8;
-typedef Mat_i16<3,3>            Mat3_i16;
-typedef Mat_i32<3,3>            Mat3_i32;
-typedef Mat_u8<3,3>             Mat3_u8;
-typedef Mat_u16<3,3>            Mat3_u16;
-typedef Mat_u32<3,3>            Mat3_u32;
-typedef Mat_d<3,3>              Mat3_d;
 
-typedef Mat<4,4>                Mat4;
-typedef Mat_i8<4,4>             Mat4_i8;
-typedef Mat_i16<4,4>            Mat4_i16;
-typedef Mat_i32<4,4>            Mat4_i32;
-typedef Mat_u8<4,4>             Mat4_u8;
-typedef Mat_u16<4,4>            Mat4_u16;
-typedef Mat_u32<4,4>            Mat4_u32;
-typedef Mat_d<4,4>              Mat4_d;
+template <typename T>
+class __Matrix4_impl : public __Matrix_impl<T, 4, 4> {
+    using __Matrix_impl<T, 4, 4>::m_data;
+    using __Matrix_impl<T, 4, 4>::ROW;
+    using __Matrix_impl<T, 4, 4>::COL;
+public:
+    using __Matrix_impl<T, 4, 4>::__Matrix_impl;
+};
 
 };
 
