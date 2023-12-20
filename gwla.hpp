@@ -451,16 +451,6 @@ public:
         return *this;
     }
 
-    template <typename S, typename R>
-    static __Vec3_impl<typename std::common_type<S, R>::type> cross(const __Vec3_impl<S>& x, const __Vec3_impl<R>& y) {
-        __Vec3_impl<typename std::common_type<S, R>::type> *cross_vec = new __Vec3_impl<typename std::common_type<S, R>::type>;
-        (*cross_vec)(0) = (x(1) * y(2)) - (y(1) * x(2));
-        (*cross_vec)(1) = (x(2) * y(0)) - (y(2) * x(0));
-        (*cross_vec)(2) = (x(0) * y(1)) - (y(0) * x(1));
-        return *cross_vec;
-    }
-
-
     template <typename S>
     __Vec3_impl<typename std::common_type<T, S>::type> cross(const __Vec3_impl<S>& other) const {
         __Vec3_impl<typename std::common_type<T, S>::type>* cross_vec
@@ -469,39 +459,6 @@ public:
         (*cross_vec)(1) = ((*this)(2) * other(0)) - (other(2) * (*this)(0));
         (*cross_vec)(2) = ((*this)(0) * other(1)) - (other(0) * (*this)(1));
         return *cross_vec;
-    }
-
-
-    static __Matrix4_impl<T>
-    look_at(const __Vec3_impl<T>& eye, const __Vec3_impl<T>& center, const __Vec3_impl<T>& up) {
-        __Matrix4_impl<T> matrix;
-        __Vec3_impl<T> X, Y, Z;
-        Z = eye - center;
-        Z.normalize();
-        Y = up;
-        X = Y.cross(Z);
-        Y = Z.cross(X);
-        X.normalize();
-        Y.normalize();
-
-        matrix(0, 0) = X.x;
-        matrix(1, 0) = X.y;
-        matrix(2, 0) = X.z;
-        matrix(3, 0) = -X.dot(eye);
-        matrix(0, 1) = Y.x;
-        matrix(1, 1) = Y.y;
-        matrix(2, 1) = Y.z;
-        matrix(3, 1) = -Y.dot(eye);
-        matrix(0, 2) = Z.x;
-        matrix(1, 2) = Z.y;
-        matrix(2, 2) = Z.z;
-        matrix(3, 2) = -Z.dot(eye);
-        matrix(0, 3) = 0;
-        matrix(1, 3) = 0;
-        matrix(2, 3) = 0;
-        matrix(3, 3) = 1.0f;
-
-        return matrix;
     }
 
 };
@@ -519,6 +476,49 @@ public:
 
     using __Vec_impl<T, 4>::__Vec_impl;
 };
+
+
+template <typename S, typename R>
+__Vec3_impl<typename std::common_type<S, R>::type> cross(const __Vec3_impl<S>& x, const __Vec3_impl<R>& y) {
+    __Vec3_impl<typename std::common_type<S, R>::type> *cross_vec = new __Vec3_impl<typename std::common_type<S, R>::type>;
+    (*cross_vec)(0) = (x(1) * y(2)) - (y(1) * x(2));
+    (*cross_vec)(1) = (x(2) * y(0)) - (y(2) * x(0));
+    (*cross_vec)(2) = (x(0) * y(1)) - (y(0) * x(1));
+    return *cross_vec;
+}
+
+
+template <typename T>
+__Matrix4_impl<T> look_at(const __Vec3_impl<T>& eye, const __Vec3_impl<T>& center, const __Vec3_impl<T>& up) {
+    __Matrix4_impl<T> matrix;
+    __Vec3_impl<T> X, Y, Z;
+    Z = eye - center;
+    Z.normalize();
+    Y = up;
+    X = Y.cross(Z);
+    Y = Z.cross(X);
+    X.normalize();
+    Y.normalize();
+
+    matrix(0, 0) = X.x;
+    matrix(1, 0) = X.y;
+    matrix(2, 0) = X.z;
+    matrix(3, 0) = -X.dot(eye);
+    matrix(0, 1) = Y.x;
+    matrix(1, 1) = Y.y;
+    matrix(2, 1) = Y.z;
+    matrix(3, 1) = -Y.dot(eye);
+    matrix(0, 2) = Z.x;
+    matrix(1, 2) = Z.y;
+    matrix(2, 2) = Z.z;
+    matrix(3, 2) = -Z.dot(eye);
+    matrix(0, 3) = 0;
+    matrix(1, 3) = 0;
+    matrix(2, 3) = 0;
+    matrix(3, 3) = 1.0f;
+
+    return matrix;
+}
 
 
 struct MatShape {
@@ -863,6 +863,18 @@ class __Matrix4_impl : public __Matrix_impl<T, 4, 4> {
 public:
     using __Matrix_impl<T, 4, 4>::__Matrix_impl;
 };
+
+
+Mat4_d perspective(double fov, double aspect, double z_near, double z_far) {
+    Mat4_d *res = new Mat4_d {0.0d};
+    double f = cos(fov/2) / sin(fov/2);
+    (*res)(0, 0) = f / aspect;
+    (*res)(1, 1) = f;
+    (*res)(2, 2) = (z_far + z_near) / (z_near - z_far);
+    (*res)(2, 3) = -1.0d;
+    (*res)(3, 2) = (2.0 * z_far * z_near) / (z_near - z_far);
+    return *res;
+}
 
 };
 
