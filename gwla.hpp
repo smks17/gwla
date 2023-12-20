@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cmath>
 #include <cstdint>
 #include <iostream>
+#include <math.h>
 
 
 #define min(a, b) (a <= b ? a : b)
@@ -44,6 +45,16 @@ namespace GW {
 
 // TODO: Write test
 // TODO: Type checking is too strict
+
+
+inline double radians(double deg) {
+    double rad = (deg/180.0d) * M_PI;
+    return rad;
+}
+inline double degrees(double rad) {
+    double deg = (rad*180.0d) / M_PI;
+    return deg;
+}
 
 
 template <typename T, size_t N> class __Vec_impl;
@@ -521,6 +532,38 @@ __Matrix4_impl<T> look_at(const __Vec3_impl<T>& eye, const __Vec3_impl<T>& cente
 }
 
 
+template <typename T, size_t N>
+__Vec_impl<T, N> sin(const __Vec_impl<T, N>& vec, bool is_degrees=false) {
+    __Vec_impl<T, N> *res = new __Vec_impl<T, N>;
+    for(int i = 0 ; i < N; i++) {
+        if (is_degrees) (*res)[i] = std::sin(radians(vec[i]));
+        else (*res)[i] = std::sin(vec[i]);
+    }
+    return (*res);
+}
+
+template <typename T, size_t N>
+__Vec_impl<T, N> cos(const __Vec_impl<T, N>& vec, bool is_degrees=false) {
+    __Vec_impl<T, N> *res = new __Vec_impl<T, N>;
+    for(int i = 0 ; i < N; i++) {
+        if (is_degrees) (*res)[i] = std::cos(radians(vec[i]));
+        else (*res)[i] = std::cos(vec[i]);
+    }
+    return (*res);
+}
+
+template <typename T, size_t N>
+__Vec_impl<T, N> tan(const __Vec_impl<T, N>& vec, bool is_degrees=false) {
+    __Vec_impl<T, N> *res = new __Vec_impl<T, N>;
+    for(int i = 0 ; i < N; i++) {
+        if (is_degrees) (*res)[i] = std::tan(radians(vec[i]));
+        else (*res)[i] = std::tan(vec[i]);
+    }
+    return (*res);
+}
+
+
+
 struct MatShape {
     size_t row, col;
 
@@ -867,13 +910,49 @@ public:
 
 Mat4_d perspective(double fov, double aspect, double z_near, double z_far) {
     Mat4_d *res = new Mat4_d {0.0d};
-    double f = cos(fov/2) / sin(fov/2);
+    double f = std::cos(fov/2) / std::sin(fov/2);
     (*res)(0, 0) = f / aspect;
     (*res)(1, 1) = f;
     (*res)(2, 2) = (z_far + z_near) / (z_near - z_far);
     (*res)(2, 3) = -1.0d;
     (*res)(3, 2) = (2.0 * z_far * z_near) / (z_near - z_far);
     return *res;
+}
+
+template <typename T, size_t N, size_t M>
+__Matrix_impl<T, N, M> sin(const __Matrix_impl<T, N, M>& mat, bool is_degrees=false) {
+    __Matrix_impl<T, N, M> *res = new __Matrix_impl<T, N, M>;
+    for(int i = 0 ; i < N; i++) {
+        for(int j = 0 ; j < N; j++) {
+            if (is_degrees) (*res)(i, j) = std::sin(radians(mat(i, j)));
+            else (*res)(i, j) = std::sin(mat(i, j));
+        }
+    }
+    return (*res);
+}
+
+template <typename T, size_t N, size_t M>
+__Matrix_impl<T, N, M> cos(const __Matrix_impl<T, N, M>& mat, bool is_degrees=false) {
+    __Matrix_impl<T, N, M> *res = new __Matrix_impl<T, N, M>;
+    for(int i = 0 ; i < N; i++) {
+        for(int j = 0 ; j < N; j++) {
+            if (is_degrees) (*res)(i, j) = std::cos(radians(mat(i, j)));
+            else (*res)(i, j) = std::cos(mat(i, j));
+        }
+    }
+    return (*res);
+}
+
+template <typename T, size_t N, size_t M>
+__Matrix_impl<T, N, M> tan(const __Matrix_impl<T, N, M>& mat, bool is_degrees=false) {
+    __Matrix_impl<T, N, M> *res = new __Matrix_impl<T, N, M>;
+    for(int i = 0 ; i < N; i++) {
+        for(int j = 0 ; j < N; j++) {
+            if (is_degrees) (*res)(i, j) = std::tan(radians(mat(i, j)));
+            else (*res)(i, j) = std::tan(mat(i, j));
+        }
+    }
+    return (*res);
 }
 
 };
