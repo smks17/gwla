@@ -417,6 +417,8 @@ public:
     }
 
     virtual inline const size_t size() const { return m_size; }
+
+    inline T* ptr() { return m_date; }
 };
 
 
@@ -878,6 +880,8 @@ public:
 
     inline const size_t get_row() const { return ROW; }
     inline const size_t get_col() const { return COL; }
+
+    inline const T* ptr() const { return const_cast<T*>(&(m_data[0])); }
 };
 
 
