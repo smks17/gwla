@@ -396,23 +396,23 @@ public:
         return *res;
     }
 
-    float vec_lenght() {
-        float lenght = 0;
+    float vec_length() {
+        float length = 0;
         for (int i = 0 ; i < size() ; i++) {
-            lenght += (m_data[i] * m_data[i]);
+            length += (m_data[i] * m_data[i]);
         }
-        return sqrt(lenght);
+        return sqrt(length);
     }
 
     void normalize() {
-        float lenght = vec_lenght();
-        (*this) /= lenght;
+        float length = vec_length();
+        (*this) /= length;
     }
 
     static __Vec_impl<float, N> normalize(__Vec_impl<float, N> vec) {
         __Vec_impl<float, N> *norm_vec = new __Vec_impl<float, N> {0.0f};
         *norm_vec = vec;
-        norm_vec.normilize();
+        norm_vec.normalize();
         return *norm_vec;
     }
 
