@@ -959,6 +959,23 @@ __Matrix_impl<T, N, M> tan(const __Matrix_impl<T, N, M>& mat, bool is_degrees=fa
     return (*res);
 }
 
+Mat4 rotate(const Mat4& mat, float angle, Vec3& axis) {
+    Mat4 r(1.0f);
+    float s = sinf(angle);
+    float c = cosf(angle);
+    Vec3 v;
+    v = cross(axis, Vec3(0.0f, 0.0f, 1.0f));
+    Mat4 k{
+        0.0f, -v.z, v.y, 0.0f,
+        v.z, 0.0f, -v.x, 0.0f,
+        -v.y, v.x, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f
+    };
+    r += k * s;
+    r += k.dot(k) * (1.0f - c);
+    return *static_cast<Mat4*>(&mat.dot(r));
+};
+
 };
 
 #endif // GWLA_HPP
