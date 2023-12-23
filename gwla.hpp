@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cmath>
 #include <cstdint>
 #include <iostream>
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 
@@ -48,11 +49,11 @@ namespace GW {
 
 
 inline double radians(double deg) {
-    double rad = (deg/180.0d) * M_PI;
+    double rad = (deg/(double)180.0) * M_PI;
     return rad;
 }
 inline double degrees(double rad) {
-    double deg = (rad*180.0d) / M_PI;
+    double deg = (rad*(double)180.0) / M_PI;
     return deg;
 }
 
@@ -615,7 +616,7 @@ public:
         assert(this->size() == other.size());
         if (this == &other)
             return *this;
-        for (int i = 0 ; i < size() ; i++) {
+        for (size_t i = 0 ; i < size() ; i++) {
             std::copy(other.m_data,
                       other.m_data + other.size(),
                       this->m_data);
@@ -817,13 +818,13 @@ public:
 
     template<typename F, size_t S,
             std::enable_if_t<std::is_convertible<F, T>::value, bool> = true>
-    __Matrix_impl<T, N, S> dot(const __Matrix_impl<F, M, S> *other) const {
+    __Matrix_impl<T, N, S> dot(const __Matrix_impl<F, M, S> &other) const {
         auto this_sh  = this->get_shape();
-        auto other_sh = other->get_shape();
+        auto other_sh = other.get_shape();
         assert(this_sh.col == other_sh.row);
 
         __Vec_impl<T, M> *this_vecs = this->get_row_vecs();
-        __Vec_impl<F, M> *other_vecs = other->get_col_vecs();
+        __Vec_impl<F, M> *other_vecs = other.get_col_vecs();
 
         __Matrix_impl<T, N, S> res;
         for (size_t i = 0 ; i < this_sh.row ; i++) {
@@ -909,12 +910,12 @@ public:
 
 
 Mat4_d perspective(double fov, double aspect, double z_near, double z_far) {
-    Mat4_d *res = new Mat4_d {0.0d};
+    Mat4_d *res = new Mat4_d {(double)0.0};
     double f = std::cos(fov/2) / std::sin(fov/2);
     (*res)(0, 0) = f / aspect;
     (*res)(1, 1) = f;
     (*res)(2, 2) = (z_far + z_near) / (z_near - z_far);
-    (*res)(2, 3) = -1.0d;
+    (*res)(2, 3) = (double)(-1.0);
     (*res)(3, 2) = (2.0 * z_far * z_near) / (z_near - z_far);
     return *res;
 }
