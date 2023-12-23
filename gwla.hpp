@@ -583,8 +583,9 @@ protected:
 public:
     __Matrix_impl() { m_data = reinterpret_cast<T*>( new T[this->size()]() ); }
     explicit __Matrix_impl(T value) {
-        m_data = new T[this->size()] {value};
-        std::fill(m_data, m_data + size(), value);
+        m_data = new T[this->size()] {static_cast<T>(0)};
+        for (size_t i = 0; i < get_row(); i++)
+            diagonal(i) = value;
     }
     __Matrix_impl(T *data_) { m_data = data_; }
     __Matrix_impl(__Matrix_impl<T, N, M> &other) {
@@ -872,6 +873,8 @@ public:
         }
         return os;
    }
+
+    void fill(T value) { std::fill(m_data, m_data+size(), value); }
 
     inline const size_t get_row() const { return ROW; }
     inline const size_t get_col() const { return COL; }
